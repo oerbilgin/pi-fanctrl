@@ -1,5 +1,6 @@
 from gpiozero import CPUTemperature as old_CPUTemperature
 
+
 # Overwrite existing value property to actually return btwn 0 and 1
 # TODO: make PR for this
 class CPUTemperature(old_CPUTemperature):
