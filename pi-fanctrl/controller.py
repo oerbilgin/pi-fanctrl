@@ -6,9 +6,13 @@ TODO: Add logging and plotting function
 """
 from cpu_fan import CPUFan
 
+def logger(cpu_temp, fan_speed):
+    print(
+        f"{{'cpu_temp': {cpu_temp}, 'fan_speed': {fan_speed}}},"
+        )
 
 def main():
-    fan_control = CPUFan(17)
+    fan_control = CPUFan(17, logger=logger)
     fan_control.start()
 
 
