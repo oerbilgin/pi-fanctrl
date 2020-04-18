@@ -25,8 +25,17 @@ class CPUFan():
         temp_ub (int, optional): Upper bound of CPU temp, in Celsius.
             Temperatures at or above this value max out the fan.
             Defaults to 70.
+        logger (callable, optional): Callable to use as a logger.
+            Takes in cpu_temp and fan_speed as arguments. Defaults
+            to `print`.
     """
-    def __init__(self, fan_pin, fan_max_rpm=100, temp_lb=50, temp_ub=70):
+    def __init__(
+            self,
+            fan_pin,
+            fan_max_rpm=100,
+            temp_lb=50,
+            temp_ub=70,
+            logger=print):
         """CPUFan init
         """
         self.fan = PWMOutputDevice(fan_pin)
@@ -36,6 +45,7 @@ class CPUFan():
             threshold=temp_ub)
 
         self.fan_max_rpm = fan_max_rpm
+        self.logger = logger
 
         self.fan.source = self.temp_reader
 
@@ -59,20 +69,26 @@ class CPUFan():
         """
         return self.temp_reader.temperature
 
+    def log(self):
+        """
+        Calls the logger function
+        """
+        self.logger(self.cpu_temp, self.fan_speed)
+
     def start(self, poll_interval=1, log=True):
         """
         Start temperature monitoring and fan control
 
         Args:
             poll_interval (int): Poll the CPU temperature every
-              x seconds. Defaults to 1.
+              n seconds. Defaults to 1.
             log (bool): Whether or not to log fan_speed and cpu_temp.
               Defaults to True.
 
         """
         while True:
             if log:
-                print(self.fan_speed, self.cpu_temp)
+                self.log()
             sleep(poll_interval)
 
 
