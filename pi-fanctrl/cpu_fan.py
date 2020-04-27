@@ -25,22 +25,28 @@ class CPUFan():
     def __init__(
             self,
             fan_pin,
+            min_pwm_strength=0.5,
             fan_max_rpm=100,
             temp_lb=50,
             temp_ub=70,
-            logger=print):
+            logger=print,
+            dry_run=False):
         """CPUFan init
         """
-        self.fan = PWMOutputDevice(fan_pin)
+        self.fan = PWMOutputDevice(fan_pin, frequency=100)
         self.temp_reader = CPUTemperature(
             min_temp=temp_lb,
             max_temp=temp_ub,
-            threshold=temp_ub)
+            threshold=temp_ub,
+            min_pwm_strength=0.5)
 
         self.fan_max_rpm = fan_max_rpm
         self.logger = logger
 
-        self.fan.source = self.temp_reader
+        if not dry_run:
+            self.fan.source = self.temp_reader
+        else:
+            self.fan.value = dry_run
 
     @property
     def fan_speed(self):
