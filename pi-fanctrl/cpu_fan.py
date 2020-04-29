@@ -33,12 +33,12 @@ class CPUFan():
             dry_run=False):
         """CPUFan init
         """
-        self.fan = PWMOutputDevice(fan_pin, frequency=100)
+        self.fan = PWMOutputDevice(fan_pin, frequency=20)
         self.temp_reader = CPUTemperature(
             min_temp=temp_lb,
             max_temp=temp_ub,
             threshold=temp_ub,
-            min_pwm_strength=0.5)
+            min_pwm_strength=min_pwm_strength)
 
         self.fan_max_rpm = fan_max_rpm
         self.logger = logger
